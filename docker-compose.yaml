@@ -1,0 +1,29 @@
+services:
+  web:
+    build: ./backendshit
+    command: flask run --host=0.0.0.0
+    volumes:
+      - ./backendshit:/app 
+      - ./frontendshit:/app/frontendshit  
+    environment:
+      FLASK_ENV: development  
+      DATABASE_URL: postgres://postgres:megaine11@db:5432/mydatabase  
+    ports:
+      - "5000:5000"  
+    depends_on:
+      - db  
+
+  db:
+    image: postgres:15  
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # Mount init.sql to the container
+    environment:
+      POSTGRES_USER: postgres  
+      POSTGRES_PASSWORD: megaine11  
+      POSTGRES_DB: mydatabase
+    ports:
+      - "5432:5432"  
+
+volumes:
+  db_data:
